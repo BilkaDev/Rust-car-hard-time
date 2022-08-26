@@ -8,7 +8,8 @@ use rust_decimal::prelude::*;
 #[get("/calculateDisselUsageForDistance/<distance>/<year_of_production>/<fuel_usage_per_100km>")]
 fn dissel_usage(distance: u32,year_of_production: u32, fuel_usage_per_100km: u32) -> Value {
     let fuel_usage = distance as f32 / fuel_usage_per_100km as f32;
-    json!({"fuelUsage": fuel_usage})
+    let fuel_usage_rounded = Decimal::new((fuel_usage * 100f32).round() as i64, 2);
+    json!({"fuelUsage": fuel_usage_rounded})
 }
 
 #[get("/probabilityOfUnitInjectorFail/<vin>")]
