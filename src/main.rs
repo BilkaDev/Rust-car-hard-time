@@ -6,10 +6,12 @@ use rand::Rng;
 use rust_decimal::prelude::*;
 
 #[get("/calculateDisselUsageForDistance/<distance>/<year_of_production>/<fuel_usage_per_100km>")]
-fn dissel_usage(distance: u32,year_of_production: u32, fuel_usage_per_100km: u32) -> Value {
+fn dissel_usage(distance: u32, year_of_production: u32, fuel_usage_per_100km: u32) -> Value {
     let fuel_usage = distance as f32 / fuel_usage_per_100km as f32;
     let fuel_usage_rounded = Decimal::new((fuel_usage * 100f32).round() as i64, 2);
-    json!({"fuelUsage": fuel_usage_rounded})
+    json!({
+        "fuelUsage": fuel_usage_rounded
+    })
 }
 
 #[get("/probabilityOfUnitInjectorFail/<vin>")]
@@ -17,7 +19,7 @@ fn probability_of_fail(vin: &str) -> Value {
    let regex = Regex::new("^(?i)[A-HJ-NPR-Z0-9]{17}$").unwrap();
    let check_vin = regex.is_match(vin);
    let mut rng = rand::thread_rng();
-    if (check_vin) {
+    if check_vin {
         let fail_probability = Decimal::new(rng.gen_range(0..100), 2);
         json!({
             "failProbability": fail_probability,
